@@ -1,0 +1,3 @@
+﻿  Main.c
+D:\ParkWoo\chanios127\DataStructureNAlgorithms_woo\Algorithm\Algorithm\Main.c(105,5): warning C4013: 'memmove'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Algorithm.vcxproj -> D:\ParkWoo\chanios127\DataStructureNAlgorithms_woo\Algorithm\Algorithm\x64\Debug\Algorithm.exe
