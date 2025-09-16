@@ -127,7 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="C:\Users\chani\Downloads\source\01장\CircularDoublyLinkedList\CircularDoublyLinkedList.c" />
+    <ClCompile Include="DoublyLinkedList\DoublyLinkedList.c" />
     <ClCompile Include="Main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\chani\Downloads\source\01장\CircularDoublyLinkedList\CircularDoublyLinkedList.h" />
+    <ClInclude Include="DoublyLinkedList\DoublyLInkedLIst.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

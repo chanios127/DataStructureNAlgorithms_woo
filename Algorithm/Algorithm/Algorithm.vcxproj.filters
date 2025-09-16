@@ -18,5 +18,19 @@
     <ClCompile Include="Main.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\chani\Downloads\source\01장\CircularDoublyLinkedList\CircularDoublyLinkedList.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DoublyLinkedList\DoublyLinkedList.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\chani\Downloads\source\01장\CircularDoublyLinkedList\CircularDoublyLinkedList.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DoublyLinkedList\DoublyLInkedLIst.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
