@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-
+import plotly.express as px
 from urllib.parse import quote
 from dataclasses import dataclass
 from IPython.display import display
@@ -148,24 +148,92 @@ def selectRawDataByPeriod(sDt, eDt):
 
     return df
 
-def selectData(df): 
+def selectData(df, cols = []): 
     result = (
-        df[df["MM_TYPE"] == "개인"]                 
-          [["YEAR", "SEASON", "EUS", "GUS", "WUS", "HUS"]]  
-          .sort_values("YEAR", ascending=True)      
+        df[df["MM_TYPE"] == "개인"]      
+            #EUS = 전기(kWh), GUS = 가스(m^3), WUS=수도(m^3), HUS=난방(미상)      
+            [["YEAR", "SEASON", "EUS", "GUS", "WUS", "HUS"]]  
+            .sort_values("YEAR", ascending=True) 
     )
+    display(result)
+
+    #1000000으로 나눠서 백만분의 일 단위로 환산, 소수점 반올림     
+    for col in cols:
+        result[col] = pd.to_numeric(result[col], errors="coerce").fillna(0) 
+        result[col] = (result[col] / 1_000_000).round(0).astype(int)
     return result
 
-df = selectRawDataByPeriod("201501","202412")
-df = selectData(df)
-
-df = df.groupby("SEASON", as_index=False).agg(totEUS=("EUS", "sum")).reset_index()
-
-fig = go.Figure(data=[go.Table(
+def showDframeOnWeb(df):
+    fig = go.Figure(data=[go.Table(
     header=dict(values=list(df.columns), fill_color='paleturquoise', align='left'),
     cells=dict(values=[df[col] for col in df.columns], fill_color='lavender', align='left')
-)])
-fig.show()
+    )])
+    fig.show()
+
+def groupBySUM(df, agg, cols):
+    #행 집계
+    df = df.groupby(agg, as_index=False)[cols].sum()
+    #열 집계
+    df["SUM"] = df[cols].sum(axis=1)
+    df =  df[[agg] + ["SUM"]]
+    return df
+
+def groupByAVG(df, agg, cols):
+    #행 집계
+    df = df.groupby(agg, as_index=False)[cols].mean()
+    #열 집계
+    df["AVG"] = df[cols].mean(axis=1)
+    df =  df[[agg] + ["AVG"]]
+    return df
+
+raw = selectRawDataByPeriod("201501","202412")
+display(raw)
+
+cols = ["EUS", "GUS", "WUS", "HUS"]
+
+df = selectData(raw, cols)
+
+gb1 = groupBySUM(df, "YEAR", cols)
+gb2 = groupByAVG(df, "SEASON",["GUS"] )
+
+display(gb1)
+display(gb2)
+
+# 연도별 변화
+graphEnergyRate = px.line(
+    gb1, 
+    x="YEAR", 
+    y="SUM",
+    text= "SUM", 
+    title="연도별 에너지 사용량 변화 - 6401 (백만분의 1 스케일링) ",
+    labels = {
+        "YEAR": "연도",
+        "SUM": "에너지 총 사용량"
+    }
+
+)
+graphEnergyRate.show()
+
+#계절별 가스 사용량 
+chartGasUseAmount = px.bar(
+    gb2,
+    x = "SEASON",
+    y = "AVG",
+    text ="AVG",
+    title = "계절별 가스 사용량 평균 (백만분의 1 스케일링) ",
+    labels = {
+        "SEASON": "계절",
+        "AVG": "가스 사용량 평균"
+    },
+    color="SEASON",
+    color_discrete_map={
+        "봄":"yellow", 
+        "여름":"red", 
+        "가을":"green",
+        "겨울":"blue"
+    }
+)
+chartGasUseAmount.show()
 
 
 '''
@@ -179,4 +247,8 @@ API 호출 성공을 확인할 수 있는 실행 결과를 캡처하여 첨부�
 3-2. 계절별 가스 사용량 평균을 막대 그래프로 시각화하고, 각 막대에 구체적인 수치를 표시하시오. 시각화 코드와 생성된 그래프를 첨부하시오. (4점)
 
  
+
+from .net to asp.net core 
+마이그레이션이라 흠. 
+
  '''
